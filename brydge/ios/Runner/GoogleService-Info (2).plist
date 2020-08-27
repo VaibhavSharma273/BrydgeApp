@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>640410173097-kap9ldv5d2lq0271so60ese1ujv9ncdm.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.640410173097-kap9ldv5d2lq0271so60ese1ujv9ncdm</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>640410173097-nolii804abtlhsp6c57u25oi0pjg4fv2.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBosowYlxIdg-Vr2_YeHDNbiy0oMpVIlK4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>640410173097</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.brydge</string>
+	<key>PROJECT_ID</key>
+	<string>brydge-22b7b</string>
+	<key>STORAGE_BUCKET</key>
+	<string>brydge-22b7b.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:640410173097:ios:03a7c206929aeb7c1cb3b8</string>
+	<key>DATABASE_URL</key>
+	<string>https://brydge-22b7b.firebaseio.com</string>
+</dict>
+</plist>
