@@ -1,12 +1,14 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'firebase_auth_utils.dart';
 
-class MyContacts extends StatefulWidget {
-  MyContacts({Key key}) : super(key: key);
-  @override
-  _MyContacts createState() => new _MyContacts();
-}
+class MyContacts extends StatelessWidget {
+  final AuthFunc auth;
+  final VoidCallback onSignOut;
+  final String userId, userEmail;
 
-class _MyContacts extends State<MyContacts> {
+  MyContacts({Key key, this.auth, this.onSignOut, this.userId, this.userEmail})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final maxHeight = MediaQuery.of(context).size.height;
@@ -16,31 +18,29 @@ class _MyContacts extends State<MyContacts> {
         body: Center(
       child: Container(
         color: Colors.black,
-        child: Stack(
-          children: <Widget> [
-            Align(
-                alignment: Alignment.topCenter,
-                child: Container(
-                  width: maxWidth * 0.5,
-                  padding: EdgeInsets.fromLTRB(0, maxHeight * 0.45, 0, 0),
+        child: Stack(children: <Widget>[
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+                width: maxWidth * 0.5,
+                padding: EdgeInsets.fromLTRB(0, maxHeight * 0.45, 0, 0),
+                //color: Colors.white,
+                decoration: BoxDecoration(
                   //color: Colors.white,
-                  decoration: BoxDecoration(
-                    //color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(50.0),
-                        bottomRight: Radius.circular(50.0)),
-                  ),
-                  child: IconButton(
-                      //padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-                      iconSize: 36,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      }),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(50.0),
+                      bottomRight: Radius.circular(50.0)),
                 ),
-              ),
-          ]
-        ),
+                child: Column(
+                  children: [
+                    Text(
+                      userEmail,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                )),
+          ),
+        ]),
       ),
     ));
   }

@@ -1,5 +1,13 @@
+import 'package:brydge/CreateProfile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import './SignUp.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:brydge/ContactsPage.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_linkedin/linkedloginflutter.dart';
 // import './ContactsPage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -10,9 +18,182 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPage extends State<LoginPage> {
+  final String redirectUrl =
+      'http://brydge.example.com/linkedin-oauth2/callback';
+  final String clientId = '78hswhzzxxxmq5';
+  final String clientSecret = 'ulBxOENAz6RtBSNp';
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  // FirebaseUser _user;
+  String email, password;
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: <String>[
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
   TextStyle style = TextStyle(
     fontSize: 17.0,
   );
+
+  @override
+  void initState() {
+    LinkedInLogin.initialize(context,
+        clientId: clientId,
+        clientSecret: clientSecret,
+        redirectUri: redirectUrl);
+    super.initState();
+  }
+
+  Future<void> handleSignInGoogle() async {
+    try {
+      GoogleSignInAccount googleSignInAccount = await _googleSignIn.signIn();
+      GoogleSignInAuthentication gSA = await googleSignInAccount.authentication;
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
+          idToken: gSA.idToken, accessToken: gSA.accessToken);
+
+      AuthResult authResult = await _auth.signInWithCredential(credential);
+      if (authResult.additionalUserInfo.isNewUser) {
+        _newUserPage();
+      } else {
+        _existingUserPage();
+      }
+    } catch (e) {}
+  }
+
+  String removeSpaces(String text) {
+    String textSpecial;
+    textSpecial = text.split(' ').join('');
+    return textSpecial;
+  }
+
+  Future<void> handleSignInLinkedin() async {
+    LinkedInLogin.loginForAccessToken(
+        destroySession: true,
+        appBar: AppBar(
+          title: Text('Demo Login Page'),
+        )).then((accessToken) {
+      print(accessToken);
+      _newUserPage();
+    }).catchError((err) {
+      print(err.toString());
+    });
+  }
+
+  void _signIn({String em, String pw}) {
+    _auth.signInWithEmailAndPassword(email: em, password: pw).then((value) {
+      print(value.user.isEmailVerified);
+      if (value.user.isEmailVerified) {
+        if (value.additionalUserInfo.isNewUser) {
+          _newUserPage();
+        } else {
+          _existingUserPage();
+        }
+      } else {
+        showCupertinoDialog(
+            context: context,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                title: Text(
+                    'Your email has not been verified. Please verify and then try again'),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            });
+      }
+    }).catchError((err) {
+      if (err.code == 'ERROR_WRONG_PASSWORD') {
+        showCupertinoDialog(
+            context: context,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                title: Text('The password was incorrect, please try again'),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            });
+      } else if (err.code == 'ERROR_INVALID_EMAIL') {
+        showCupertinoDialog(
+            context: context,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                title: Text('Please enter a valid email'),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            });
+      } else if (err.code == 'ERROR_USER_NOT_FOUND') {
+        showCupertinoDialog(
+            context: context,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                title: Text(
+                    'No account is associated with this email, Sign up instead'),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            });
+      } else {
+        showCupertinoDialog(
+            context: context,
+            builder: (context) {
+              return CupertinoAlertDialog(
+                title: Text('Please try again after some time'),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            });
+      }
+    });
+  }
+
+  void _signInFacebook() async {
+    FacebookLogin facebookLogin = FacebookLogin();
+    final result = await facebookLogin.logIn(['email']);
+    final token = result.accessToken.token;
+    final graphResponse = await http.get(
+        'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=$token');
+    print(graphResponse.body);
+    if (result.status == FacebookLoginStatus.loggedIn) {
+      final credential = FacebookAuthProvider.getCredential(accessToken: token);
+      _auth.signInWithCredential(credential);
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyContacts(
+                    userEmail: 'Facebook',
+                  )));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +203,11 @@ class _LoginPage extends State<LoginPage> {
 
     // To accept user's email
     final emailField = TextField(
+      onChanged: (textVal) {
+        setState(() {
+          email = textVal;
+        });
+      },
       obscureText: false,
       style: TextStyle(fontSize: 17),
       decoration: InputDecoration(
@@ -34,6 +220,11 @@ class _LoginPage extends State<LoginPage> {
 
     // To accept user's password
     final passwordField = TextField(
+      onChanged: (textVal) {
+        setState(() {
+          password = textVal;
+        });
+      },
       obscureText: true,
       style: TextStyle(fontSize: 17),
       decoration: InputDecoration(
@@ -71,8 +262,8 @@ class _LoginPage extends State<LoginPage> {
         child: MaterialButton(
           minWidth: MediaQuery.of(context).size.width,
           onPressed: () {
-            //Navigator.push(context, MaterialPageRoute(builder: (context) => MyContacts()));
-            Navigator.pop(context); // Change here
+            _signIn(em: removeSpaces(email), pw: password);
+            //Navigator.push(context, MaterialPageRoute(builder: (context) => MyContacts()));// Change here
           },
           child: Text("Login",
               textAlign: TextAlign.center,
@@ -88,8 +279,10 @@ class _LoginPage extends State<LoginPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          GestureDetector(
-            onTap: () {},
+          InkWell(
+            onTap: () {
+              _signInFacebook();
+            },
             child: Container(
               height: maxHeight * 0.07,
               width: maxHeight * 0.07,
@@ -101,8 +294,10 @@ class _LoginPage extends State<LoginPage> {
               ),
             ),
           ),
-          GestureDetector(
-            onTap: () {},
+          InkWell(
+            onTap: () {
+              handleSignInGoogle();
+            },
             child: Container(
               height: maxHeight * 0.07,
               width: maxHeight * 0.07,
@@ -113,8 +308,10 @@ class _LoginPage extends State<LoginPage> {
               ),
             ),
           ),
-          GestureDetector(
-            onTap: () {},
+          InkWell(
+            onTap: () {
+              handleSignInLinkedin();
+            },
             child: Container(
               height: maxHeight * 0.07,
               width: maxHeight * 0.07,
@@ -221,5 +418,21 @@ class _LoginPage extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void _newUserPage() {
+    //Navigate to New User Page
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => CreateProfile()));
+  }
+
+  void _existingUserPage() {
+    //Navigate to New User Page
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MyContacts(
+                  userEmail: 'Existing User!!',
+                )));
   }
 }
