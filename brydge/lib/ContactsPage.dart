@@ -3,9 +3,15 @@ import './screens/ContactPages/RecentContacts.dart';
 import './screens/ContactPages/AllContacts.dart';
 import './screens/ContactPages/FavoriteContacts.dart';
 import './screens/ContactEditing/AddContact.dart';
+import 'firebase_auth_utils.dart';
 
 class MyContacts extends StatefulWidget {
-  MyContacts({Key key}) : super(key: key);
+  final AuthFunc auth;
+  final VoidCallback onSignOut;
+  final String userId, userEmail;
+
+  MyContacts({Key key, this.auth, this.onSignOut, this.userId, this.userEmail})
+      : super(key: key);
   @override
   _MyContacts createState() => new _MyContacts();
 }

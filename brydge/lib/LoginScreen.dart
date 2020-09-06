@@ -432,7 +432,7 @@ class _LoginPage extends State<LoginPage> {
         context,
         MaterialPageRoute(
             builder: (context) => MyContacts(
-                  userEmail: 'Existing User!!',
+                  userEmail: 'Existing User!',
                 )));
   }
 }
