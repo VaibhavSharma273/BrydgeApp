@@ -17,31 +17,29 @@ class _CreateMyProfile extends State<CreateMyProfile> {
         body: Center(
       child: Container(
         color: Colors.white,
-        child: Column(
-          children: <Widget> [
-            Align(
-                alignment: Alignment.topCenter,
-                child: Container(
-                  width: maxWidth * 0.5,
-                  padding: EdgeInsets.fromLTRB(0, maxHeight * 0.45, 0, 0),
-                  //color: Colors.white,
-                  decoration: BoxDecoration(
-                    //color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(50.0),
-                        bottomRight: Radius.circular(50.0)),
-                  ),
-                  child: IconButton(
-                      //padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      icon: Icon(Icons.arrow_back_ios, color: Colors.black),
-                      iconSize: 36,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      }),
-                ),
+        child: Column(children: <Widget>[
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              width: maxWidth * 0.5,
+              padding: EdgeInsets.fromLTRB(0, maxHeight * 0.45, 0, 0),
+              //color: Colors.white,
+              decoration: BoxDecoration(
+                //color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(50.0),
+                    bottomRight: Radius.circular(50.0)),
               ),
-          ]
-        ),
+              child: IconButton(
+                  //padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+                  iconSize: 36,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
+            ),
+          ),
+        ]),
       ),
     ));
   }
