@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AddContact extends StatefulWidget {
   final String userUID;
@@ -21,13 +22,15 @@ class _AddContact extends State<AddContact> {
       addressText,
       notesMeetingText;
 
+  final formKey = GlobalKey<FormState>();
+
   // DateTime connectedOn, metOn;
   String connectedOnText, metOnText;
   @override
   Widget build(BuildContext context) {
+    var newFormat = DateFormat("MM/dd/yyyy");
     void addMethod(
-        {@required String userId,
-        @required String firstName,
+        {@required String firstName,
         @required String lastName,
         @required String primaryEmail,
         @required String secondaryEmail,
@@ -46,6 +49,9 @@ class _AddContact extends State<AddContact> {
         @required bool fav}) async {
       CollectionReference collectionReference =
           Firestore.instance.collection('Contacts');
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final FirebaseUser user = await auth.currentUser();
+      final String userId = user.uid;
       Map<String, dynamic> data = {
         "userUID": userId,
         "FirstName": firstName,
@@ -120,11 +126,19 @@ class _AddContact extends State<AddContact> {
       ),
     );
 
-    final firstNameField = TextField(
+    final firstNameField = TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: (textVal) {
         setState(() {
           firstNameText = textVal;
         });
+      },
+      validator: (fNameValue) {
+        if (fNameValue.isEmpty) {
+          return 'This field is mandatory';
+        }
+
+        return null;
       },
       obscureText: false,
       style: TextStyle(
@@ -170,11 +184,30 @@ class _AddContact extends State<AddContact> {
       ),
     );
 
-    final primaryEmail = TextField(
+    final primaryEmail = TextFormField(
       onChanged: (textVal) {
         setState(() {
           primaryEmailText = textVal;
         });
+      },
+      validator: (pEmailValue) {
+        if (pEmailValue.isEmpty) {
+          return 'This field is mandatory';
+        }
+        String regEmail = "[a-zA-Z0-9\+\.\_\%\-\+]{1,256}" +
+            "\\@" +
+            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+            "(" +
+            "\\." +
+            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+            ")+";
+        RegExp regExp = new RegExp(regEmail);
+
+        if (!regExp.hasMatch(pEmailValue)) {
+          // So, the email is valid
+          return 'This is not a valid email';
+        }
+        return null;
       },
       obscureText: false,
       style: TextStyle(
@@ -220,11 +253,18 @@ class _AddContact extends State<AddContact> {
       ),
     );
 
-    final companyName = TextField(
+    final companyName = TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: (textVal) {
         setState(() {
           companyNameText = textVal;
         });
+      },
+      validator: (cValue) {
+        if (cValue.isEmpty) {
+          return 'This field is mandatory';
+        }
+        return null;
       },
       obscureText: false,
       style: TextStyle(
@@ -245,11 +285,20 @@ class _AddContact extends State<AddContact> {
       ),
     );
 
-    final mobileNumber = TextField(
+    final mobileNumber = TextFormField(
+      keyboardType: TextInputType.number,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       onChanged: (textVal) {
         setState(() {
           mobileNumberText = textVal;
         });
+      },
+      validator: (mobileValue) {
+        if (mobileValue.isNotEmpty &&
+            mobileValue.contains(new RegExp(r'[A-Z]'))) {
+          return 'Mobile Number can not have alphabets';
+        }
+        return null;
       },
       obscureText: false,
       style: TextStyle(
@@ -271,6 +320,7 @@ class _AddContact extends State<AddContact> {
     );
 
     final address = TextField(
+      keyboardType: TextInputType.streetAddress,
       onChanged: (textVal) {
         setState(() {
           addressText = textVal;
@@ -310,7 +360,7 @@ class _AddContact extends State<AddContact> {
         filled: true,
         fillColor: Colors.white,
         contentPadding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
-        hintText: "Add some notes",
+        hintText: "Add notes",
         hintStyle:
             TextStyle(fontSize: 17, color: Colors.black.withOpacity(0.5)),
         enabledBorder: OutlineInputBorder(
@@ -324,7 +374,9 @@ class _AddContact extends State<AddContact> {
       ),
     );
 
-    final metDate = TextField(
+    final metDate = TextFormField(
+      initialValue: newFormat.format(DateTime.now()).toString(),
+      keyboardType: TextInputType.datetime,
       onChanged: (textVal) {
         setState(() {
           metOnText = textVal;
@@ -349,7 +401,9 @@ class _AddContact extends State<AddContact> {
       ),
     );
 
-    final connectDate = TextField(
+    final connectDate = TextFormField(
+      initialValue: newFormat.format(DateTime.now()).toString(),
+      keyboardType: TextInputType.datetime,
       onChanged: (textVal) {
         setState(() {
           connectedOnText = textVal;
@@ -386,30 +440,48 @@ class _AddContact extends State<AddContact> {
           borderRadius: BorderRadius.all(Radius.circular(80.0)),
         ),
         child: InkWell(
-          onTap: () async {
-            final FirebaseAuth auth = FirebaseAuth.instance;
-            final FirebaseUser user = await auth.currentUser();
-            final String uid = user.uid;
+          onTap: () {
+            if (formKey.currentState.validate()) {
+              formKey.currentState.save();
+              addMethod(
+                  firstName: nullcheck(firstNameText),
+                  lastName: nullcheck(lastNameText),
+                  primaryEmail: nullcheck(primaryEmailText),
+                  secondaryEmail: "",
+                  designation: nullcheck(designationText),
+                  companyName: nullcheck(companyNameText),
+                  phoneNumber: nullcheck(mobileNumberText),
+                  officeNumber: "",
+                  address: nullcheck(addressText),
+                  location: "",
+                  connectedOn: DateTime.now(),
+                  metOn: DateTime.now(),
+                  notesMeeting: nullcheck(notesMeetingText),
+                  linkedinURL: "",
+                  facebookURL: "",
+                  websiteURL: "",
+                  fav: true);
+            }
             //CHANGE THIS - DateTime
-            addMethod(
-                userId: nullcheck(uid),
-                firstName: nullcheck(firstNameText),
-                lastName: nullcheck(lastNameText),
-                primaryEmail: nullcheck(primaryEmailText),
-                secondaryEmail: "",
-                designation: nullcheck(designationText),
-                companyName: nullcheck(companyNameText),
-                phoneNumber: nullcheck(mobileNumberText),
-                officeNumber: "",
-                address: nullcheck(addressText),
-                location: "",
-                connectedOn: DateTime.now(),
-                metOn: DateTime.now(),
-                notesMeeting: nullcheck(notesMeetingText),
-                linkedinURL: "",
-                facebookURL: "",
-                websiteURL: "",
-                fav: true);
+            // addMethod(
+            //     userId: nullcheck(uid),
+            //     firstName: nullcheck(firstNameText),
+            //     lastName: nullcheck(lastNameText),
+            //     primaryEmail: nullcheck(primaryEmailText),
+            //     secondaryEmail: "",
+            //     designation: nullcheck(designationText),
+            //     companyName: nullcheck(companyNameText),
+            //     phoneNumber: nullcheck(mobileNumberText),
+            //     officeNumber: "",
+            //     address: nullcheck(addressText),
+            //     location: "",
+            //     connectedOn: DateTime.now(),
+            //     metOn: DateTime.now(),
+            //     notesMeeting: nullcheck(notesMeetingText),
+            //     linkedinURL: "",
+            //     facebookURL: "",
+            //     websiteURL: "",
+            //     fav: true);
           },
           child: Center(
             child: Text("Add Contact",
@@ -424,119 +496,125 @@ class _AddContact extends State<AddContact> {
       )),
     );
 
-    return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: Size.fromHeight(5.0), // here the desired height
-          child: AppBar(
-            backgroundColor: Colors.white,
-          )),
-      //resizeToAvoidBottomPadding: false,
-      body: Center(
-        child: Container(
-          height: maxHeight,
-          width: maxWidth,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              tileMode: TileMode.clamp,
-              colors: <Color>[
-                Color(0xFF23B8EB),
-                Color(0xFFA9D7E3),
-              ],
-            ),
-          ),
-          child: MediaQuery.removePadding(
-            context: context,
-            removeTop: true,
-            child: ListView(
-              children: [
-                Stack(
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, maxHeight * 0.03, 0, 0),
-                        child: Container(
-                          width: maxWidth * 0.18,
-                          height: maxWidth * 0.12,
-                          padding:
-                              EdgeInsets.fromLTRB(0, 0, maxWidth * 0.02, 0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(50.0),
-                                bottomRight: Radius.circular(50.0)),
-                          ),
-                          child: IconButton(
-                              alignment: Alignment.center,
-                              icon: Icon(Icons.arrow_back,
-                                  color: Color(0xFF23B8EB)),
-                              iconSize: 30,
-                              onPressed: () {
-                                Navigator.pop(context);
-                              }),
-                        ),
-                      ),
-                    ),
-                    Align(
-                        alignment: Alignment.topCenter,
-                        child: Padding(
-                          padding:
-                              EdgeInsets.fromLTRB(0, maxHeight * 0.03, 0, 0),
-                          child: scanCard,
-                        )),
-                    Center(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          bottom: maxHeight * 0.04,
-                          left: maxHeight * 0.02,
-                          right: maxHeight * 0.02,
-                          top: 150,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              child: Text(
-                                'Scan a contact card',
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
+    return Form(
+      key: formKey,
+      child: Container(
+        child: Scaffold(
+          appBar: PreferredSize(
+              preferredSize: Size.fromHeight(5.0), // here the desired height
+              child: AppBar(
+                backgroundColor: Colors.white,
+              )),
+          //resizeToAvoidBottomPadding: false,
+          body: Center(
+            child: Container(
+              height: maxHeight,
+              width: maxWidth,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  tileMode: TileMode.clamp,
+                  colors: <Color>[
+                    Color(0xFF23B8EB),
+                    Color(0xFFA9D7E3),
+                  ],
+                ),
+              ),
+              child: MediaQuery.removePadding(
+                context: context,
+                removeTop: true,
+                child: ListView(
+                  children: [
+                    Stack(
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding:
+                                EdgeInsets.fromLTRB(0, maxHeight * 0.03, 0, 0),
+                            child: Container(
+                              width: maxWidth * 0.18,
+                              height: maxWidth * 0.12,
+                              padding:
+                                  EdgeInsets.fromLTRB(0, 0, maxWidth * 0.02, 0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(50.0),
+                                    bottomRight: Radius.circular(50.0)),
                               ),
+                              child: IconButton(
+                                  alignment: Alignment.center,
+                                  icon: Icon(Icons.arrow_back,
+                                      color: Color(0xFF23B8EB)),
+                                  iconSize: 30,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  }),
                             ),
-                            SizedBox(height: maxHeight * 0.02),
-                            firstNameField,
-                            SizedBox(height: maxHeight * 0.01),
-                            lastNameField,
-                            SizedBox(height: maxHeight * 0.03),
-                            primaryEmail,
-                            SizedBox(height: maxHeight * 0.03),
-                            designation,
-                            SizedBox(height: maxHeight * 0.01),
-                            companyName,
-                            SizedBox(height: maxHeight * 0.01),
-                            mobileNumber,
-                            SizedBox(height: maxHeight * 0.01),
-                            address,
-                            SizedBox(height: maxHeight * 0.03),
-                            notes,
-                            SizedBox(height: maxHeight * 0.03),
-                            metDate,
-                            SizedBox(height: maxHeight * 0.01),
-                            connectDate,
-                            SizedBox(height: maxHeight * 0.01),
-                            SizedBox(height: maxHeight * 0.03),
-                            addContact,
-                          ],
+                          ),
                         ),
-                      ),
+                        Align(
+                            alignment: Alignment.topCenter,
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                  0, maxHeight * 0.03, 0, 0),
+                              child: scanCard,
+                            )),
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              bottom: maxHeight * 0.04,
+                              left: maxHeight * 0.02,
+                              right: maxHeight * 0.02,
+                              top: 150,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  child: Text(
+                                    'Scan a contact card',
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: maxHeight * 0.02),
+                                firstNameField,
+                                SizedBox(height: maxHeight * 0.01),
+                                lastNameField,
+                                SizedBox(height: maxHeight * 0.03),
+                                primaryEmail,
+                                SizedBox(height: maxHeight * 0.03),
+                                designation,
+                                SizedBox(height: maxHeight * 0.01),
+                                companyName,
+                                SizedBox(height: maxHeight * 0.01),
+                                mobileNumber,
+                                SizedBox(height: maxHeight * 0.01),
+                                address,
+                                SizedBox(height: maxHeight * 0.03),
+                                notes,
+                                SizedBox(height: maxHeight * 0.03),
+                                metDate,
+                                SizedBox(height: maxHeight * 0.01),
+                                connectDate,
+                                SizedBox(height: maxHeight * 0.01),
+                                SizedBox(height: maxHeight * 0.03),
+                                addContact,
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

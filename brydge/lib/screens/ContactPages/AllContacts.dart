@@ -17,8 +17,8 @@ class Contact {
   final String officeNumber;
   final String address;
   final String location;
-  final DateTime connectedOn;
-  final DateTime metOn;
+  final String connectedOn;
+  final String metOn;
   final String notesMeeting;
   final String linkedinURL;
   final String facebookURL;
@@ -159,6 +159,7 @@ class _AllContacts extends State<AllContacts> {
                       itemBuilder: (ctx, i) {
                         // DocumentSnapshot ds = snapshot.data.documents[i];
                         return ContactCard(
+                            snapshot.data.documents[i].documentID,
                             snapshot.data.documents[i].data['FirstName'] +
                                 " " +
                                 snapshot.data.documents[i].data['LastName'],
@@ -179,7 +180,11 @@ class _AllContacts extends State<AllContacts> {
                             // To be changed - Date Format
                             snapshot.data.documents[i].data['Favorite'],
                             false,
-                            true
+                            true,
+                            snapshot.data.documents[i].data['MeetingNotes'],
+                            snapshot.data.documents[i].data['PrimaryEmail'],
+                            snapshot.data.documents[i].data['Address'],
+                            snapshot.data.documents[i].data['PhoneNumber']
                             // ds['First Name'] + ds['Last Name'],
                             // ds['Designation'],
                             // ds['Company Name'],

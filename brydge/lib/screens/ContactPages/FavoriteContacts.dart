@@ -54,6 +54,7 @@ class _FavoriteContacts extends State<FavoriteContacts> {
                   return ListView.builder(
                     itemCount: snapshot.data.documents?.length,
                     itemBuilder: (ctx, i) => ContactCard(
+                        snapshot.data.documents[i].documentID,
                         snapshot.data.documents[i].data['FirstName'] +
                             " " +
                             snapshot.data.documents[i].data['LastName'],
@@ -74,7 +75,11 @@ class _FavoriteContacts extends State<FavoriteContacts> {
                         // To be changed - Date Format
                         snapshot.data.documents[i].data['Favorite'],
                         false,
-                        true),
+                        true,
+                        snapshot.data.documents[i].data['MeetingNotes'],
+                        snapshot.data.documents[i].data['PrimaryEmail'],
+                        snapshot.data.documents[i].data['Address'],
+                        snapshot.data.documents[i].data['PhoneNumber']),
                   );
                 }
               }),

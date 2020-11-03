@@ -152,7 +152,7 @@ class _SignUpScreen extends State<SignUpScreen> {
     final maxWidth = MediaQuery.of(context).size.width;
 
     final emailField = TextFormField(
-      autovalidate: signUpAttempt,
+      autovalidateMode: AutovalidateMode.always,
       onChanged: (textVal) {
         setState(() {
           email = textVal;
@@ -197,7 +197,7 @@ class _SignUpScreen extends State<SignUpScreen> {
     );
 
     final passwordField = TextFormField(
-      autovalidate: signUpAttempt,
+      autovalidateMode: AutovalidateMode.always,
       onChanged: (textVal) {
         setState(() {
           password = textVal;
@@ -231,7 +231,7 @@ class _SignUpScreen extends State<SignUpScreen> {
     );
 
     final rePasswordField = TextFormField(
-      autovalidate: signUpAttempt,
+      autovalidateMode: AutovalidateMode.always,
       onChanged: (textVal) {
         setState(() {
           passwordConfirm = textVal;
@@ -394,7 +394,7 @@ class _SignUpScreen extends State<SignUpScreen> {
                           alignment: Alignment.topLeft,
                           padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                           child: Text(
-                            'Welcome to ConnectMe, an app that will allow you to network better, faster, and more efficicently. To begin, create an account below!',
+                            'Welcome to Brydge, an app that will allow you to network better, faster, and more efficicently. To begin, create an account below!',
                             style: TextStyle(fontSize: 17, color: Colors.white),
                           ),
                         ),

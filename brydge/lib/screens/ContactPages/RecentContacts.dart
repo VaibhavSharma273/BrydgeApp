@@ -92,6 +92,7 @@ class _RecentContacts extends State<RecentContacts> {
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
+                print("HIIIIIII " + snapshot.data.documents?.length.toString());
                 return _showLoading();
               } else {
                 return ListView.builder(
@@ -100,6 +101,7 @@ class _RecentContacts extends State<RecentContacts> {
                         : snapshot.data.documents?.length,
                     itemBuilder: (ctx, i) => i < 4
                         ? ContactCard(
+                            snapshot.data.documents[i].documentID,
                             snapshot.data.documents[i].data['FirstName'] +
                                 " " +
                                 snapshot.data.documents[i].data['LastName'],
@@ -120,169 +122,311 @@ class _RecentContacts extends State<RecentContacts> {
                             // To be changed - Date Format
                             snapshot.data.documents[i].data['Favorite'],
                             false,
-                            true)
+                            true,
+                            snapshot.data.documents[i].data['MeetingNotes'],
+                            snapshot.data.documents[i].data['PrimaryEmail'],
+                            snapshot.data.documents[i].data['Address'],
+                            snapshot.data.documents[i].data['PhoneNumber'])
+
+                        //notes, email, address, number)
                         : GroupedCard(
                             [
-                                Contact(
-                                  userId: snapshot
-                                      .data.documents[i].data['userUID'],
-                                  firstName: snapshot
-                                      .data.documents[i].data['FirstName'],
-                                  lastName: snapshot
-                                      .data.documents[i].data['LastName'],
-                                  primaryEmail: snapshot
-                                      .data.documents[i].data['PrimaryEmail'],
-                                  secondaryEmail: snapshot
-                                      .data.documents[i].data['SecondaryEmail'],
-                                  designation: snapshot
-                                      .data.documents[i].data['Designation'],
-                                  companyName: snapshot
-                                      .data.documents[i].data['CompanyName'],
-                                  phoneNumber: snapshot
-                                      .data.documents[i].data['PhoneNumber'],
-                                  officeNumber: snapshot
-                                      .data.documents[i].data['OfficeNumber'],
-                                  address: snapshot
-                                      .data.documents[i].data['Address'],
-                                  location: snapshot
-                                      .data.documents[i].data['Location'],
-                                  connectedOn: (DateTime.parse(snapshot
-                                      .data.documents[i].data['ConnectedOn']
-                                      .toDate()
-                                      .toString())),
-                                  metOn: (DateTime.parse(snapshot
-                                      .data.documents[i].data['MetOn']
-                                      .toDate()
-                                      .toString())),
-                                  notesMeeting: snapshot
-                                      .data.documents[i].data['MeetingNotes'],
-                                  linkedinURL: snapshot
-                                      .data.documents[i].data['LinkedInURL'],
-                                  facebookURL: snapshot
-                                      .data.documents[i].data['FacebookURL'],
-                                  websiteURL: snapshot
-                                      .data.documents[i].data['WebsiteURL'],
-                                  fav: snapshot
-                                      .data.documents[i].data['Favorite'],
-                                ),
-                                Contact(
-                                  userId: snapshot.data[i + 1].data['userUID'],
-                                  firstName:
-                                      snapshot.data[i + 1].data['FirstName'],
-                                  lastName:
-                                      snapshot.data[i + 1].data['LastName'],
-                                  primaryEmail:
-                                      snapshot.data[i + 1].data['PrimaryEmail'],
-                                  secondaryEmail: snapshot
-                                      .data[i + 1].data['SecondaryEmail'],
-                                  designation:
-                                      snapshot.data[i + 1].data['Designation'],
-                                  companyName:
-                                      snapshot.data[i + 1].data['CompanyName'],
-                                  phoneNumber:
-                                      snapshot.data[i + 1].data['PhoneNumber'],
-                                  officeNumber:
-                                      snapshot.data[i + 1].data['OfficeNumber'],
-                                  address: snapshot.data[i + 1].data['Address'],
-                                  location:
-                                      snapshot.data[i + 1].data['Location'],
-                                  connectedOn: (DateTime.parse(snapshot
-                                      .data[i + 1].data['ConnectedOn']
-                                      .toDate()
-                                      .toString())),
-                                  metOn: (DateTime.parse(snapshot
-                                      .data[i + 1].data['MetOn']
-                                      .toDate()
-                                      .toString())),
-                                  notesMeeting:
-                                      snapshot.data[i + 1].data['MeetingNotes'],
-                                  linkedinURL:
-                                      snapshot.data[i + 1].data['LinkedInURL'],
-                                  facebookURL:
-                                      snapshot.data[i + 1].data['FacebookURL'],
-                                  websiteURL:
-                                      snapshot.data[i + 1].data['WebsiteURL'],
-                                  fav: snapshot.data[i + 1].data['Favorite'],
-                                ),
-                                Contact(
-                                  userId: snapshot.data[i + 2].data['userUID'],
-                                  firstName:
-                                      snapshot.data[i + 2].data['FirstName'],
-                                  lastName:
-                                      snapshot.data[i + 2].data['LastName'],
-                                  primaryEmail:
-                                      snapshot.data[i + 2].data['PrimaryEmail'],
-                                  secondaryEmail: snapshot
-                                      .data[i + 2].data['SecondaryEmail'],
-                                  designation:
-                                      snapshot.data[i + 2].data['Designation'],
-                                  companyName:
-                                      snapshot.data[i + 2].data['CompanyName'],
-                                  phoneNumber:
-                                      snapshot.data[i + 2].data['PhoneNumber'],
-                                  officeNumber:
-                                      snapshot.data[i + 2].data['OfficeNumber'],
-                                  address: snapshot.data[i + 2].data['Address'],
-                                  location:
-                                      snapshot.data[i + 2].data['Location'],
-                                  connectedOn: (DateTime.parse(snapshot
-                                      .data[i + 2].data['ConnectedOn']
-                                      .toDate()
-                                      .toString())),
-                                  metOn: (DateTime.parse(snapshot
-                                      .data[i + 2].data['MetOn']
-                                      .toDate()
-                                      .toString())),
-                                  notesMeeting:
-                                      snapshot.data[i + 2].data['MeetingNotes'],
-                                  linkedinURL:
-                                      snapshot.data[i + 2].data['LinkedInURL'],
-                                  facebookURL:
-                                      snapshot.data[i + 2].data['FacebookURL'],
-                                  websiteURL:
-                                      snapshot.data[i + 2].data['WebsiteURL'],
-                                  fav: snapshot.data[i + 2].data['Favorite'],
-                                ),
-                                Contact(
-                                  userId: snapshot.data[i + 3].data['userUID'],
-                                  firstName:
-                                      snapshot.data[i + 3].data['First Name'],
-                                  lastName:
-                                      snapshot.data[i + 3].data['Last Name'],
-                                  primaryEmail: snapshot
-                                      .data[i + 3].data['Primary Email'],
-                                  secondaryEmail: snapshot
-                                      .data[i + 3].data['Secondary Email'],
-                                  designation:
-                                      snapshot.data[i + 3].data['Designation'],
-                                  companyName:
-                                      snapshot.data[i + 3].data['Company Name'],
-                                  phoneNumber:
-                                      snapshot.data[i + 3].data['Phone Number'],
-                                  officeNumber: snapshot
-                                      .data[i + 3].data['Office Number'],
-                                  address: snapshot.data[i + 3].data['Address'],
-                                  location:
-                                      snapshot.data[i + 3].data['Location'],
-                                  connectedOn: (DateTime.parse(snapshot
-                                      .data[i + 3].data['Connected On']
-                                      .toDate()
-                                      .toString())),
-                                  metOn: (DateTime.parse(snapshot
-                                      .data[i + 3].data['Met On']
-                                      .toDate()
-                                      .toString())),
-                                  notesMeeting: snapshot
-                                      .data[i + 3].data['Meeting Notes'],
-                                  linkedinURL:
-                                      snapshot.data[i + 3].data['LinkedIn URL'],
-                                  facebookURL:
-                                      snapshot.data[i + 3].data['Facebook URL'],
-                                  websiteURL:
-                                      snapshot.data[i + 3].data['Website URL'],
-                                  fav: snapshot.data[i + 3].data['Favorite'],
-                                ),
-                              ],
+                              Contact(
+                                userId:
+                                    snapshot.data.documents[i]?.data['userUID'],
+                                firstName: snapshot
+                                    .data.documents[i]?.data['FirstName'],
+                                lastName: snapshot
+                                    .data.documents[i]?.data['LastName'],
+                                primaryEmail: snapshot
+                                    .data.documents[i]?.data['PrimaryEmail'],
+                                secondaryEmail: snapshot
+                                    .data.documents[i]?.data['SecondaryEmail'],
+                                designation: snapshot
+                                    .data.documents[i]?.data['Designation'],
+                                companyName: snapshot
+                                    .data.documents[i]?.data['CompanyName'],
+                                phoneNumber: snapshot
+                                    .data.documents[i]?.data['PhoneNumber'],
+                                officeNumber: snapshot
+                                    .data.documents[i]?.data['OfficeNumber'],
+                                address:
+                                    snapshot.data.documents[i]?.data['Address'],
+                                location: snapshot
+                                    .data.documents[i]?.data['Location'],
+                                connectedOn: newFormat
+                                    .format(DateTime.parse(snapshot
+                                        .data.documents[i]?.data['ConnectedOn']
+                                        .toDate()
+                                        .toString()))
+                                    .toString(),
+                                metOn: newFormat
+                                    .format(DateTime.parse(snapshot
+                                        .data.documents[i]?.data['MetOn']
+                                        .toDate()
+                                        .toString()))
+                                    .toString(),
+                                notesMeeting: snapshot
+                                    .data?.documents[i]?.data['MeetingNotes'],
+                                linkedinURL: snapshot
+                                    .data.documents[i]?.data['LinkedInURL'],
+                                facebookURL: snapshot
+                                    .data.documents[i]?.data['FacebookURL'],
+                                websiteURL: snapshot
+                                    .data.documents[i]?.data['WebsiteURL'],
+                                fav: snapshot
+                                    .data?.documents[i]?.data['Favorite'],
+                              ),
+                              Contact(
+                                userId: snapshot
+                                    .data.documents[i + 1]?.data['userUID'],
+                                firstName: snapshot
+                                    .data.documents[i + 1]?.data['FirstName'],
+                                lastName: snapshot
+                                    .data.documents[i + 1]?.data['LastName'],
+                                primaryEmail: snapshot.data.documents[i + 1]
+                                    ?.data['PrimaryEmail'],
+                                secondaryEmail: snapshot.data.documents[i + 1]
+                                    ?.data['SecondaryEmail'],
+                                designation: snapshot
+                                    .data.documents[i + 1]?.data['Designation'],
+                                companyName: snapshot
+                                    .data.documents[i + 1]?.data['CompanyName'],
+                                phoneNumber: snapshot
+                                    .data.documents[i + 1]?.data['PhoneNumber'],
+                                officeNumber: snapshot.data.documents[i + 1]
+                                    ?.data['OfficeNumber'],
+                                address: snapshot
+                                    .data.documents[i + 1]?.data['Address'],
+                                location: snapshot
+                                    .data.documents[i + 1]?.data['Location'],
+                                connectedOn: newFormat
+                                    .format(DateTime.parse(snapshot.data
+                                        .documents[i + 1]?.data['ConnectedOn']
+                                        .toDate()
+                                        .toString()))
+                                    .toString(),
+                                metOn: newFormat
+                                    .format(DateTime.parse(snapshot
+                                        .data.documents[i + 1]?.data['MetOn']
+                                        .toDate()
+                                        .toString()))
+                                    .toString(),
+                                notesMeeting: snapshot.data?.documents[i + 1]
+                                    ?.data['MeetingNotes'],
+                                linkedinURL: snapshot
+                                    .data.documents[i + 1]?.data['LinkedInURL'],
+                                facebookURL: snapshot
+                                    .data.documents[i + 1]?.data['FacebookURL'],
+                                websiteURL: snapshot
+                                    .data.documents[i + 1]?.data['WebsiteURL'],
+                                fav: snapshot
+                                    .data?.documents[i + 1]?.data['Favorite'],
+                                //   userId: snapshot.data[i + 1].data['userUID'],
+                                //   firstName:
+                                //       snapshot.data[i + 1].data['FirstName'],
+                                //   lastName:
+                                //       snapshot.data[i + 1].data['LastName'],
+                                //   primaryEmail:
+                                //       snapshot.data[i + 1].data['PrimaryEmail'],
+                                //   secondaryEmail: snapshot
+                                //       .data[i + 1].data['SecondaryEmail'],
+                                //   designation:
+                                //       snapshot.data[i + 1].data['Designation'],
+                                //   companyName:
+                                //       snapshot.data[i + 1].data['CompanyName'],
+                                //   phoneNumber:
+                                //       snapshot.data[i + 1].data['PhoneNumber'],
+                                //   officeNumber:
+                                //       snapshot.data[i + 1].data['OfficeNumber'],
+                                //   address: snapshot.data[i + 1].data['Address'],
+                                //   location:
+                                //       snapshot.data[i + 1].data['Location'],
+                                //   connectedOn: (DateTime.parse(snapshot
+                                //       .data[i + 1].data['ConnectedOn']
+                                //       .toDate()
+                                //       .toString())),
+                                //   metOn: (DateTime.parse(snapshot
+                                //       .data[i + 1].data['MetOn']
+                                //       .toDate()
+                                //       .toString())),
+                                //   notesMeeting:
+                                //       snapshot.data[i + 1].data['MeetingNotes'],
+                                //   linkedinURL:
+                                //       snapshot.data[i + 1].data['LinkedInURL'],
+                                //   facebookURL:
+                                //       snapshot.data[i + 1].data['FacebookURL'],
+                                //   websiteURL:
+                                //       snapshot.data[i + 1].data['WebsiteURL'],
+                                //   fav: snapshot.data[i + 1].data['Favorite'],
+                              ),
+                              Contact(
+                                userId: snapshot
+                                    .data.documents[i + 2]?.data['userUID'],
+                                firstName: snapshot
+                                    .data.documents[i + 2]?.data['FirstName'],
+                                lastName: snapshot
+                                    .data.documents[i + 2]?.data['LastName'],
+                                primaryEmail: snapshot.data.documents[i + 2]
+                                    ?.data['PrimaryEmail'],
+                                secondaryEmail: snapshot.data.documents[i + 2]
+                                    ?.data['SecondaryEmail'],
+                                designation: snapshot
+                                    .data.documents[i + 2]?.data['Designation'],
+                                companyName: snapshot
+                                    .data.documents[i + 2]?.data['CompanyName'],
+                                phoneNumber: snapshot
+                                    .data.documents[i + 2]?.data['PhoneNumber'],
+                                officeNumber: snapshot.data.documents[i + 2]
+                                    ?.data['OfficeNumber'],
+                                address: snapshot
+                                    .data.documents[i + 2]?.data['Address'],
+                                location: snapshot
+                                    .data.documents[i + 2]?.data['Location'],
+                                connectedOn: newFormat
+                                    .format(DateTime.parse(snapshot.data
+                                        .documents[i + 2]?.data['ConnectedOn']
+                                        .toDate()
+                                        .toString()))
+                                    .toString(),
+                                metOn: newFormat
+                                    .format(DateTime.parse(snapshot
+                                        .data.documents[i + 2]?.data['MetOn']
+                                        .toDate()
+                                        .toString()))
+                                    .toString(),
+                                notesMeeting: snapshot.data?.documents[i + 2]
+                                    ?.data['MeetingNotes'],
+                                linkedinURL: snapshot
+                                    .data.documents[i + 2]?.data['LinkedInURL'],
+                                facebookURL: snapshot
+                                    .data.documents[i + 2]?.data['FacebookURL'],
+                                websiteURL: snapshot
+                                    .data.documents[i + 2]?.data['WebsiteURL'],
+                                fav: snapshot
+                                    .data?.documents[i + 2]?.data['Favorite'],
+                                // userId: snapshot.data[i + 2].data['userUID'],
+                                // firstName:
+                                //     snapshot.data[i + 2].data['FirstName'],
+                                // lastName:
+                                //     snapshot.data[i + 2].data['LastName'],
+                                // primaryEmail:
+                                //     snapshot.data[i + 2].data['PrimaryEmail'],
+                                // secondaryEmail: snapshot
+                                //     .data[i + 2].data['SecondaryEmail'],
+                                // designation:
+                                //     snapshot.data[i + 2].data['Designation'],
+                                // companyName:
+                                //     snapshot.data[i + 2].data['CompanyName'],
+                                // phoneNumber:
+                                //     snapshot.data[i + 2].data['PhoneNumber'],
+                                // officeNumber:
+                                //     snapshot.data[i + 2].data['OfficeNumber'],
+                                // address: snapshot.data[i + 2].data['Address'],
+                                // location:
+                                //     snapshot.data[i + 2].data['Location'],
+                                // connectedOn: (DateTime.parse(snapshot
+                                //     .data[i + 2].data['ConnectedOn']
+                                //     .toDate()
+                                //     .toString())),
+                                // metOn: (DateTime.parse(snapshot
+                                //     .data[i + 2].data['MetOn']
+                                //     .toDate()
+                                //     .toString())),
+                                // notesMeeting:
+                                //     snapshot.data[i + 2].data['MeetingNotes'],
+                                // linkedinURL:
+                                //     snapshot.data[i + 2].data['LinkedInURL'],
+                                // facebookURL:
+                                //     snapshot.data[i + 2].data['FacebookURL'],
+                                // websiteURL:
+                                //     snapshot.data[i + 2].data['WebsiteURL'],
+                                // fav: snapshot.data[i + 2].data['Favorite'],
+                              ),
+                              Contact(
+                                userId: snapshot
+                                    .data.documents[i + 3]?.data['userUID'],
+                                firstName: snapshot
+                                    .data.documents[i + 3]?.data['FirstName'],
+                                lastName: snapshot
+                                    .data.documents[i + 3]?.data['LastName'],
+                                primaryEmail: snapshot.data.documents[i + 3]
+                                    ?.data['PrimaryEmail'],
+                                secondaryEmail: snapshot.data.documents[i + 3]
+                                    ?.data['SecondaryEmail'],
+                                designation: snapshot
+                                    .data.documents[i + 3]?.data['Designation'],
+                                companyName: snapshot
+                                    .data.documents[i + 3]?.data['CompanyName'],
+                                phoneNumber: snapshot
+                                    .data.documents[i + 3]?.data['PhoneNumber'],
+                                officeNumber: snapshot.data.documents[i + 3]
+                                    ?.data['OfficeNumber'],
+                                address: snapshot
+                                    .data.documents[i + 3]?.data['Address'],
+                                location: snapshot
+                                    .data.documents[i + 3]?.data['Location'],
+                                connectedOn: newFormat
+                                    .format(DateTime.parse(snapshot.data
+                                        .documents[i + 3]?.data['ConnectedOn']
+                                        .toDate()
+                                        .toString()))
+                                    .toString(),
+                                metOn: newFormat
+                                    .format(DateTime.parse(snapshot
+                                        .data.documents[i + 3]?.data['MetOn']
+                                        .toDate()
+                                        .toString()))
+                                    .toString(),
+                                notesMeeting: snapshot.data?.documents[i + 3]
+                                    ?.data['MeetingNotes'],
+                                linkedinURL: snapshot
+                                    .data.documents[i + 3]?.data['LinkedInURL'],
+                                facebookURL: snapshot
+                                    .data.documents[i + 3]?.data['FacebookURL'],
+                                websiteURL: snapshot
+                                    .data.documents[i + 3]?.data['WebsiteURL'],
+                                fav: snapshot
+                                    .data?.documents[i + 3]?.data['Favorite'],
+                                //   userId: snapshot.data[i + 3].data['userUID'],
+                                //   firstName:
+                                //       snapshot.data[i + 3].data['First Name'],
+                                //   lastName:
+                                //       snapshot.data[i + 3].data['Last Name'],
+                                //   primaryEmail: snapshot
+                                //       .data[i + 3].data['Primary Email'],
+                                //   secondaryEmail: snapshot
+                                //       .data[i + 3].data['Secondary Email'],
+                                //   designation:
+                                //       snapshot.data[i + 3].data['Designation'],
+                                //   companyName:
+                                //       snapshot.data[i + 3].data['Company Name'],
+                                //   phoneNumber:
+                                //       snapshot.data[i + 3].data['Phone Number'],
+                                //   officeNumber: snapshot
+                                //       .data[i + 3].data['Office Number'],
+                                //   address: snapshot.data[i + 3].data['Address'],
+                                //   location:
+                                //       snapshot.data[i + 3].data['Location'],
+                                //   connectedOn: (DateTime.parse(snapshot
+                                //       .data[i + 3].data['Connected On']
+                                //       .toDate()
+                                //       .toString())),
+                                //   metOn: (DateTime.parse(snapshot
+                                //       .data[i + 3].data['Met On']
+                                //       .toDate()
+                                //       .toString())),
+                                //   notesMeeting: snapshot
+                                //       .data[i + 3].data['Meeting Notes'],
+                                //   linkedinURL:
+                                //       snapshot.data[i + 3].data['LinkedIn URL'],
+                                //   facebookURL:
+                                //       snapshot.data[i + 3].data['Facebook URL'],
+                                //   websiteURL:
+                                //       snapshot.data[i + 3].data['Website URL'],
+                                //   fav: snapshot.data[i + 3].data['Favorite'],
+                              ),
+                            ],
                             snapshot.data.documents[i].data['CompanyName'],
                             newFormat
                                 .format(DateTime.parse(snapshot
@@ -290,8 +434,11 @@ class _RecentContacts extends State<RecentContacts> {
                                     .toDate()
                                     .toString()))
                                 .toString(),
-                            newFormat
-                                .format(DateTime.parse(snapshot.data.documents[i].data['MetOn'].toDate().toString()))));
+                            newFormat.format(DateTime.parse(snapshot
+                                .data.documents[i].data['MetOn']
+                                .toDate()
+                                .toString())),
+                          ));
               }
             }),
       ),

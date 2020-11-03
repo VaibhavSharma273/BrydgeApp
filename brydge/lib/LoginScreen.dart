@@ -244,7 +244,7 @@ class _LoginPage extends State<LoginPage> {
       child: FlatButton(
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => PasswordVerify()));
+              MaterialPageRoute(builder: (context) => ForgotPassword()));
         },
         padding: EdgeInsets.only(right: 5.0),
         child: Text(
