@@ -172,10 +172,7 @@ class _MyProfile extends State<MyProfile> {
                             icon: Icon(Icons.arrow_back, color: Colors.white),
                             iconSize: 30,
                             onPressed: () {
-                              var count = 0;
-                              Navigator.popUntil(context, (route) {
-                                return count++ == 2;
-                              });
+                             Navigator.pop(context);
                             }),
                       ),
                     ),
