@@ -1,6 +1,8 @@
-// ****************** CONTACT VIEW PAGE SCREEN [FROM PARTIAL VIEW] ******************
+// ****************** SETTINGS SCREEN ******************
 
 import 'package:flutter/material.dart';
+import './MyAccount.dart';
+import './Activity.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -33,35 +35,47 @@ class _Settings extends State<Settings> {
                         fontWeight: FontWeight.w800,
                         color: Colors.white))),
             SizedBox(height: 10),
-            Container(
-                width: maxWidth * 0.90,
-                height: 30,
-                decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                ),
-                padding: const EdgeInsets.fromLTRB(10.0, 4.0, 5.0, 5.0),
-                child: Text("My Account",
-                    style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF1C8CB4)))),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MyAccount()));
+              },
+              child: Container(
+                  width: maxWidth * 0.90,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                  ),
+                  padding: const EdgeInsets.fromLTRB(10.0, 4.0, 5.0, 5.0),
+                  child: Text("My Account",
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF1C8CB4)))),
+            ),
             SizedBox(height: 10),
-            Container(
-                width: maxWidth * 0.90,
-                height: 30,
-                decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                ),
-                padding: const EdgeInsets.fromLTRB(10.0, 4.0, 5.0, 5.0),
-                child: Text("Activity",
-                    style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF1C8CB4))))
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Activity()));
+              },
+              child: Container(
+                  width: maxWidth * 0.90,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                  ),
+                  padding: const EdgeInsets.fromLTRB(10.0, 4.0, 5.0, 5.0),
+                  child: Text("Activity",
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF1C8CB4)))),
+            )
           ],
         ));
 

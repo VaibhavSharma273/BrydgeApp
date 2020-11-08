@@ -1,39 +1,39 @@
-
-// ****************** MY PROFILE SCREEN ******************
+// ****************** MY ACCOUNT SCREEN ******************
 
 import 'package:flutter/material.dart';
 
-class MyProfile extends StatefulWidget {
+class MyAccount extends StatefulWidget {
   @override
-  _MyProfile createState() => new _MyProfile();
+  _MyAccount createState() => new _MyAccount();
 }
 
-class _MyProfile extends State<MyProfile> {
+class _MyAccount extends State<MyAccount> {
   @override
   Widget build(BuildContext context) {
     final maxHeight = MediaQuery.of(context).size.height;
     final maxWidth = MediaQuery.of(context).size.width;
 
-    final profilePicture = Container(
-      width: 110,
-      height: 110,
-      decoration: BoxDecoration(
-        image: DecorationImage(image: AssetImage("assets/linkedin.jpg")),
-        shape: BoxShape.circle,
-        color: Colors.white,
-      ),
-    );
-
-    final displayName = Text("Name",
-        style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w800,
-            color: Color(0xFF1C8CB4)));
-    final displayDesignationCompany = Text("Designation at Company",
-        style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            color: Color(0xFF1C8CB4)));
+    final displayName = Container(
+        width: maxWidth * 0.90,
+        //height: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: Color(0xFF3EBFED),
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+        ),
+        padding: const EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 10.0),
+        child: Center(
+          child: RichText(
+            text: TextSpan(
+                style: TextStyle(fontSize: 17, color: Colors.white),
+                children: [
+                  TextSpan(
+                      text: "Name: ",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  TextSpan(text: "Name"),
+                ]),
+          ),
+        ));
 
     final email = Container(
         width: maxWidth * 0.90,
@@ -77,49 +77,7 @@ class _MyProfile extends State<MyProfile> {
           ),
         ));
 
-    final company = Container(
-        width: maxWidth * 0.90,
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          color: Color(0xFF3EBFED),
-          borderRadius: BorderRadius.all(Radius.circular(12.0)),
-        ),
-        padding: const EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 10.0),
-        child: Center(
-          child: RichText(
-            text: TextSpan(
-                style: TextStyle(fontSize: 17, color: Colors.white),
-                children: [
-                  TextSpan(
-                      text: "Company: ",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  TextSpan(text: "Company"),
-                ]),
-          ),
-        ));
-
-    final address = Container(
-        width: maxWidth * 0.90,
-        decoration: BoxDecoration(
-          shape: BoxShape.rectangle,
-          color: Color(0xFF3EBFED),
-          borderRadius: BorderRadius.all(Radius.circular(12.0)),
-        ),
-        padding: const EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 10.0),
-        child: Center(
-          child: RichText(
-            text: TextSpan(
-                style: TextStyle(fontSize: 17, color: Colors.white),
-                children: [
-                  TextSpan(
-                      text: "Address: ",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  TextSpan(text: "Address"),
-                ]),
-          ),
-        ));
-
-    final shareContactButton = Material(
+    final forgotPassword = Material(
       borderRadius: BorderRadius.circular(30.0),
       child: Ink(
         width: maxWidth * 0.5,
@@ -132,7 +90,54 @@ class _MyProfile extends State<MyProfile> {
             onPressed: () {
               Navigator.pop(context); // Change here
             },
-            child: Text("Share Contact",
+            child: Text("Forgot Password",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white))),
+      ),
+    );
+
+    final signOut = Material(
+      borderRadius: BorderRadius.circular(30.0),
+      child: Ink(
+        width: maxWidth * 0.5,
+        decoration: const BoxDecoration(
+          color: Color(0xFF0CB2ED),
+          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+        ),
+        child: MaterialButton(
+            minWidth: maxWidth * 0.5,
+            onPressed: () {
+              var count = 0;
+              Navigator.popUntil(context, (route) {
+                return count++ == 2;
+              });
+            },
+            child: Text("Sign Out",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white))),
+      ),
+    );
+
+    final deleteAccount = Material(
+      borderRadius: BorderRadius.circular(30.0),
+      child: Ink(
+        width: maxWidth * 0.5,
+        decoration: const BoxDecoration(
+          color: Color(0xFF0CB2ED),
+          borderRadius: BorderRadius.all(Radius.circular(30.0)),
+        ),
+        child: MaterialButton(
+            minWidth: maxWidth * 0.5,
+            onPressed: () {
+              Navigator.pop(context); // Change here
+            },
+            child: Text("Delete Account",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 17,
@@ -170,17 +175,11 @@ class _MyProfile extends State<MyProfile> {
                             icon: Icon(Icons.arrow_back, color: Colors.white),
                             iconSize: 30,
                             onPressed: () {
-                             Navigator.pop(context);
+                              Navigator.pop(context);
                             }),
                       ),
                     ),
                   ),
-                  Align(
-                      alignment: Alignment.topCenter,
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(0, maxHeight * 0.03, 0, 0),
-                        child: profilePicture,
-                      )),
                   Align(
                     alignment: Alignment.topRight,
                     child: Padding(
@@ -214,24 +213,24 @@ class _MyProfile extends State<MyProfile> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          displayName,
-                          displayDesignationCompany,
-                          SizedBox(height: maxHeight * 0.02),
-                          Text("Contact Information",
+                          Text("Account Information",
                               style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w600,
                                   color: Color(0xFF1C8CB4))),
+                          SizedBox(height: maxHeight * 0.02),
+                          displayName,
                           SizedBox(height: maxHeight * 0.01),
                           email,
                           SizedBox(height: maxHeight * 0.01),
                           contactNumber,
                           SizedBox(height: maxHeight * 0.01),
-                          company,
-                          SizedBox(height: maxHeight * 0.01),
-                          address,
                           SizedBox(height: maxHeight * 0.02),
-                          shareContactButton,
+                          forgotPassword,
+                          SizedBox(height: maxHeight * 0.01),
+                          signOut,
+                          SizedBox(height: maxHeight * 0.01),
+                          deleteAccount,
                         ],
                       ),
                     ),
