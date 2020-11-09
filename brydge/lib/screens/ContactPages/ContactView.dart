@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import '../ContactEditing/EditContact.dart';
 
 class ContactView extends StatefulWidget {
@@ -186,7 +187,9 @@ class _ContactView extends State<ContactView> {
         child: MaterialButton(
             minWidth: maxWidth * 0.5,
             onPressed: () {
-              Navigator.pop(context); // Change here
+              sendEmail();
+
+              // Navigator.pop(context); // Change here
             },
             child: Text("Generate Mail",
                 textAlign: TextAlign.center,
@@ -373,5 +376,18 @@ class _ContactView extends State<ContactView> {
         ),
       ),
     );
+  }
+
+  void sendEmail() async {
+    final Email email = Email(
+      body: 'Email body',
+      subject: 'Email subject',
+      recipients: ['neelmalhotra01@gmail.com'],
+      // cc: ['cc@example.com'],
+      // bcc: ['bcc@example.com'],
+      // attachmentPaths: ['/path/to/attachment.zip'],
+      isHTML: false,
+    );
+    await FlutterEmailSender.send(email);
   }
 }
