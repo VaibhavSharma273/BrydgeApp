@@ -4,6 +4,8 @@ import './screens/ContactPages/RecentContacts.dart';
 import './screens/ContactPages/AllContacts.dart';
 import './screens/ContactPages/FavoriteContacts.dart';
 import './screens/ContactEditing/AddContact.dart';
+import './screens//Settings/Settings.dart';
+import './screens/MyProfile/MyProfile.dart';
 // import 'firebase_auth_utils.dart';
 
 class MyContacts extends StatefulWidget {
@@ -89,10 +91,7 @@ class _MyContacts extends State<MyContacts> {
                 final FirebaseAuth auth = FirebaseAuth.instance;
                 final FirebaseUser user = await auth.currentUser();
                 uid = user.uid;
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AddContact(userUID: uid)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Settings()));
               }),
         ),
       ),
@@ -117,7 +116,7 @@ class _MyContacts extends State<MyContacts> {
               icon: Icon(Icons.person, color: Color(0xFF3EBFED)),
               iconSize: 30,
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => MyProfile()));
               }),
         ),
       ),
