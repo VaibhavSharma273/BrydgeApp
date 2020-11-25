@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class AddContact extends StatefulWidget {
   final String userUID;
@@ -20,7 +21,9 @@ class _AddContact extends State<AddContact> {
       companyNameText,
       mobileNumberText,
       addressText,
-      notesMeetingText;
+      notesMeetingText,
+      metOnDate = DateFormat("yyyy-MM-dd").format(DateTime.now()).toString(),
+      connectedOnDate = DateFormat("yyyy-MM-dd").format(DateTime.now()).toString();
 
   final formKey = GlobalKey<FormState>();
 
@@ -374,59 +377,115 @@ class _AddContact extends State<AddContact> {
       ),
     );
 
-    final metDate = TextFormField(
-      initialValue: newFormat.format(DateTime.now()).toString(),
-      keyboardType: TextInputType.datetime,
-      onChanged: (textVal) {
-        setState(() {
-          metOnText = textVal;
-        });
-      },
-      obscureText: false,
-      style: TextStyle(
-          fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white),
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-        hintText: "Met On",
-        hintStyle:
-            TextStyle(fontSize: 17, color: Colors.white.withOpacity(0.7)),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(32.0),
-          borderSide: BorderSide(color: Colors.white, width: 5.0),
+    final metDate = Material(
+      borderRadius: BorderRadius.circular(30.0),
+      child: Ink(
+          child: Container(
+        height: 0.05 * maxHeight,
+        decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.all(Radius.circular(80.0)),
+            border: Border.all(color: Colors.white, width: 5.0)),
+        child: InkWell(
+          onTap: () {
+            DatePicker.showDatePicker(context,
+                showTitleActions: true,
+                minTime: DateTime(1990, 3, 5),
+                maxTime: DateTime(2020, 11, 25), onChanged: (date) {
+              //print('change $date');
+              print('change $date');
+              setState(() {
+                metOnDate =
+                    DateFormat("yyyy-MM-dd").format(date).toString();
+              });
+            }, onConfirm: (date) {
+              setState(() {
+                metOnDate =
+                    DateFormat("yyyy-MM-dd").format(date).toString();
+              });
+            }, currentTime: DateTime.parse(metOnDate), locale: LocaleType.en);
+          },
+          child: Center(
+            child: Text("Met On: $metOnDate",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: Color(0xFF3EBFED),
+                  fontWeight: FontWeight.bold,
+                )),
+          ),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(32.0),
-          borderSide: BorderSide(color: Colors.white, width: 5.0),
-        ),
-      ),
+      )),
     );
 
-    final connectDate = TextFormField(
-      initialValue: newFormat.format(DateTime.now()).toString(),
-      keyboardType: TextInputType.datetime,
-      onChanged: (textVal) {
-        setState(() {
-          connectedOnText = textVal;
-        });
-      },
-      obscureText: false,
-      style: TextStyle(
-          fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white),
-      decoration: InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-        hintText: "Connected On",
-        hintStyle:
-            TextStyle(fontSize: 17, color: Colors.white.withOpacity(0.7)),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(32.0),
-          borderSide: BorderSide(color: Colors.white, width: 5.0),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(32.0),
-          borderSide: BorderSide(color: Colors.white, width: 5.0),
-        ),
-      ),
-    );
+
+    // final connectDate = TextFormField(
+    //   initialValue: newFormat.format(DateTime.now()).toString(),
+    //   keyboardType: TextInputType.datetime,
+    //   onChanged: (textVal) {
+    //     setState(() {
+    //       connectedOnText = textVal;
+    //     });
+    //   },
+    //   obscureText: false,
+    //   style: TextStyle(
+    //       fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white),
+    //   decoration: InputDecoration(
+    //     contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+    //     hintText: "Connected On",
+    //     hintStyle:
+    //         TextStyle(fontSize: 17, color: Colors.white.withOpacity(0.7)),
+    //     enabledBorder: OutlineInputBorder(
+    //       borderRadius: BorderRadius.circular(32.0),
+    //       borderSide: BorderSide(color: Colors.white, width: 5.0),
+    //     ),
+    //     focusedBorder: OutlineInputBorder(
+    //       borderRadius: BorderRadius.circular(32.0),
+    //       borderSide: BorderSide(color: Colors.white, width: 5.0),
+    //     ),
+    //   ),
+    // );
+
+    // final connectDate = Material(
+    //   borderRadius: BorderRadius.circular(30.0),
+    //   child: Ink(
+    //       child: Container(
+    //     height: 0.05 * maxHeight,
+    //     decoration: BoxDecoration(
+    //         color: Colors.transparent,
+    //         borderRadius: BorderRadius.all(Radius.circular(80.0)),
+    //         border: Border.all(color: Colors.white, width: 5.0)),
+    //     child: InkWell(
+    //       onTap: () {
+    //         DatePicker.showDatePicker(context,
+    //             showTitleActions: true,
+    //             minTime: DateTime(1990, 3, 5),
+    //             maxTime: DateTime(2020, 11, 25), onChanged: (date) {
+    //           //print('change $date');
+    //           print('change $date');
+    //           setState(() {
+    //             connectedOnDate =
+    //                 DateFormat("yyyy-MM-dd").format(date).toString();
+    //           });
+    //         }, onConfirm: (date) {
+    //           setState(() {
+    //             connectedOnDate =
+    //                 DateFormat("yyyy-MM-dd").format(date).toString();
+    //           });
+    //         }, currentTime: DateTime.now(), locale: LocaleType.en);
+    //       },
+    //       child: Center(
+    //         child: Text("Connected On: $connectedOnDate",
+    //             textAlign: TextAlign.center,
+    //             style: TextStyle(
+    //               fontSize: 17,
+    //               color: Color(0xFF3EBFED),
+    //               fontWeight: FontWeight.bold,
+    //             )),
+    //       ),
+    //     ),
+    //   )),
+    // );
 
     final addContact = Material(
       elevation: 5.0,
@@ -455,7 +514,7 @@ class _AddContact extends State<AddContact> {
                   address: nullcheck(addressText),
                   location: "",
                   connectedOn: DateTime.now(),
-                  metOn: DateTime.now(),
+                  metOn: DateTime.parse(metOnDate),
                   notesMeeting: nullcheck(notesMeetingText),
                   linkedinURL: "",
                   facebookURL: "",
@@ -601,8 +660,6 @@ class _AddContact extends State<AddContact> {
                                 notes,
                                 SizedBox(height: maxHeight * 0.03),
                                 metDate,
-                                SizedBox(height: maxHeight * 0.01),
-                                connectDate,
                                 SizedBox(height: maxHeight * 0.01),
                                 SizedBox(height: maxHeight * 0.03),
                                 addContact,
