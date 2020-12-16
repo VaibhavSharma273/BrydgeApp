@@ -1,4 +1,4 @@
-# Card Scanner (Python)
+# Business Card Scanner (Python)
 Our business card scanner implements the model proposed by Madan Kumar, C. and Brindha, M.[1] Using OCR and image manipulation techniques, we are able to identify a region of interest in a given business card, and then identify the text and classify it using NLP. We are currently working on combining the model with deep learning in order to provide better scanning and classification ability.
 
 ## Using the program
