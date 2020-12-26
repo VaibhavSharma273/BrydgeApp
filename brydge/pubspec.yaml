@@ -40,7 +40,9 @@ dependencies:
   intl: ^0.16.1
   flutter_email_sender: ^3.0.1
   flutter_datetime_picker: ^1.4.0
-
+  camera:
+  path_provider:
+  path:
   
 dev_dependencies:
   flutter_test:

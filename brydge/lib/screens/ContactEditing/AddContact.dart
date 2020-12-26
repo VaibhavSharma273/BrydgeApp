@@ -5,6 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import '../CameraControl/scanner.dart';
+
+import 'package:camera/camera.dart';
 
 class AddContact extends StatefulWidget {
   final String userUID;
@@ -23,7 +26,8 @@ class _AddContact extends State<AddContact> {
       addressText,
       notesMeetingText,
       metOnDate = DateFormat("yyyy-MM-dd").format(DateTime.now()).toString(),
-      connectedOnDate = DateFormat("yyyy-MM-dd").format(DateTime.now()).toString();
+      connectedOnDate =
+          DateFormat("yyyy-MM-dd").format(DateTime.now()).toString();
 
   final formKey = GlobalKey<FormState>();
 
@@ -31,7 +35,6 @@ class _AddContact extends State<AddContact> {
   String connectedOnText, metOnText;
   @override
   Widget build(BuildContext context) {
-    var newFormat = DateFormat("MM/dd/yyyy");
     void addMethod(
         {@required String firstName,
         @required String lastName,
@@ -121,11 +124,27 @@ class _AddContact extends State<AddContact> {
           ],
         ),
         child: IconButton(
-            padding: EdgeInsets.all(10),
-            alignment: Alignment.center,
-            icon: Icon(Icons.camera_alt, color: Colors.white),
-            iconSize: 70,
-            onPressed: () {}),
+          padding: EdgeInsets.all(10),
+          alignment: Alignment.center,
+          icon: Icon(Icons.camera_alt, color: Colors.white),
+          iconSize: 70,
+          onPressed: () async {
+            WidgetsFlutterBinding.ensureInitialized();
+
+            // Obtain a list of the available cameras on the device.
+            final cameras = await availableCameras();
+
+            // Get a specific camera from the list of available cameras.
+            final firstCamera = cameras.first;
+
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Scanner(
+                          camera: firstCamera,
+                        )));
+          },
+        ),
       ),
     );
 
@@ -395,13 +414,11 @@ class _AddContact extends State<AddContact> {
               //print('change $date');
               print('change $date');
               setState(() {
-                metOnDate =
-                    DateFormat("yyyy-MM-dd").format(date).toString();
+                metOnDate = DateFormat("yyyy-MM-dd").format(date).toString();
               });
             }, onConfirm: (date) {
               setState(() {
-                metOnDate =
-                    DateFormat("yyyy-MM-dd").format(date).toString();
+                metOnDate = DateFormat("yyyy-MM-dd").format(date).toString();
               });
             }, currentTime: DateTime.parse(metOnDate), locale: LocaleType.en);
           },
@@ -417,7 +434,6 @@ class _AddContact extends State<AddContact> {
         ),
       )),
     );
-
 
     // final connectDate = TextFormField(
     //   initialValue: newFormat.format(DateTime.now()).toString(),
