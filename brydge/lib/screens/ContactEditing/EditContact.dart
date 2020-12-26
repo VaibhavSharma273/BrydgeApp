@@ -3,8 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class EditContact extends StatefulWidget {
   final String documentID;
@@ -46,9 +44,7 @@ class _EditContact extends State<EditContact> {
       companyNameText,
       mobileNumberText,
       addressText,
-      notesMeetingText,
-      metOnDate = DateFormat("yyyy-MM-dd").format(DateTime.now()).toString();
-
+      notesMeetingText;
   final formKey = GlobalKey<FormState>();
   String connectedOnText, metOnText;
   @override
@@ -56,6 +52,8 @@ class _EditContact extends State<EditContact> {
     final name = widget.name;
     // final designation = widget.designation;
     final company = widget.company;
+    final connectDate = widget.connectDate;
+    final metDate = widget.metDate;
     final maxWidth = MediaQuery.of(context).size.width;
     final maxHeight = MediaQuery.of(context).size.height;
     final notes = widget.notes;
@@ -304,45 +302,57 @@ class _EditContact extends State<EditContact> {
       ),
     );
 
-    final metDateField = Material(
-      borderRadius: BorderRadius.circular(30.0),
-      child: Ink(
-          child: Container(
-        height: 0.05 * maxHeight,
-        decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.all(Radius.circular(80.0)),
-            border: Border.all(color: Colors.white, width: 5.0)),
-        child: InkWell(
-          onTap: () {
-            DatePicker.showDatePicker(context,
-                showTitleActions: true,
-                minTime: DateTime(1990, 3, 5),
-                maxTime: DateTime(2020, 11, 25), onChanged: (date) {
-              //print('change $date');
-              print('change $date');
-              setState(() {
-                metOnDate = DateFormat("yyyy-MM-dd").format(date).toString();
-              });
-            }, onConfirm: (date) {
-              setState(() {
-                metOnDate = DateFormat("yyyy-MM-dd").format(date).toString();
-              });
-            }, currentTime: DateTime.parse(metOnDate), locale: LocaleType.en);
-          },
-          child: Center(
-            child: Text("Met On: $metOnDate",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 17,
-                  color: Color(0xFF0CB2ED),
-                  fontWeight: FontWeight.bold,
-                )),
-          ),
+    final metDateField = TextFormField(
+      onChanged: (textVal) {
+        setState(() {
+          metOnText = textVal;
+        });
+      },
+      initialValue: metDate,
+      obscureText: false,
+      style: TextStyle(
+          fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+        // hintText: metDate,
+        hintStyle:
+            TextStyle(fontSize: 15, color: Colors.white.withOpacity(1.0)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(32.0),
+          borderSide: BorderSide(color: Colors.white, width: 5.0),
         ),
-      )),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(32.0),
+          borderSide: BorderSide(color: Colors.white, width: 5.0),
+        ),
+      ),
     );
 
+    final connectDateField = TextFormField(
+      onChanged: (textVal) {
+        setState(() {
+          connectedOnText = textVal;
+        });
+      },
+      initialValue: connectDate,
+      obscureText: false,
+      style: TextStyle(
+          fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+        // hintText: connectDate,
+        hintStyle:
+            TextStyle(fontSize: 15, color: Colors.white.withOpacity(1.0)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(32.0),
+          borderSide: BorderSide(color: Colors.white, width: 5.0),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(32.0),
+          borderSide: BorderSide(color: Colors.white, width: 5.0),
+        ),
+      ),
+    );
     final doneButton = Material(
       borderRadius: BorderRadius.circular(30.0),
       child: Ink(
@@ -366,8 +376,8 @@ class _EditContact extends State<EditContact> {
                   officeNumber: "",
                   address: nullcheck(addressText),
                   location: "",
-                  connectedOn: DateTime.now(), //??
-                  metOn: DateTime.parse(metOnDate),
+                  connectedOn: DateTime.now(),
+                  metOn: DateTime.now(),
                   notesMeeting: nullcheck(notesMeetingText),
                   linkedinURL: "",
                   facebookURL: "",
@@ -475,6 +485,8 @@ class _EditContact extends State<EditContact> {
                           notesField,
                           SizedBox(height: maxHeight * 0.03),
                           metDateField,
+                          SizedBox(height: maxHeight * 0.01),
+                          connectDateField,
                           SizedBox(height: maxHeight * 0.03),
                           doneButton,
                         ],
