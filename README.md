@@ -1,7 +1,7 @@
 # BrydgeApp
  
 A networking app with the aim of digitalizing business cards. Developed by Neel Malhotra and Vaibhav Sharma.
-![alt text](https://https://github.com/VaibhavSharma273/BrydgeApp/blob/master/Sample/Manage%20Contacts.png)
+![alt text](https://https://github.com/VaibhavSharma273/BrydgeApp/blob/master/Sample/Manage%20Contacts.png?raw=true)
 
 ## Demo
 Coming soon!
